@@ -1,0 +1,125 @@
+<div class="container-fluid py-4">
+  <div class="d-flex flex-column flex-md-row
+              justify-content-between
+              align-items-md-center
+              gap-3 mb-4">
+    <div>
+      <h2 class="fw-bold mb-1">
+        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+        Gestión de Incidentes
+      </h2>
+      <p class="text-muted mb-0">
+        Consulta y administra los incidentes registrados
+      </p>
+    </div>
+    <button class="btn btn-primary" (click)="openNewIncident()">
+      <i class="bi bi-plus-lg me-2"></i>
+      Nuevo incidente
+    </button>
+  </div>
+  <div class="card border-0 shadow-sm mb-4">
+    <div class="card-body">
+      <div class="row g-3 justify-content-center">
+        <div class="col-12 col-md-5">
+          <label class="form-label fw-semibold">
+            Buscar
+          </label>
+          <div class="input-group">
+            <span class="input-group-text bg-white">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" class="form-control" placeholder="Buscar por título o descripción"
+              [(ngModel)]="searchText">
+          </div>
+        </div>
+        <div class="col-12 col-md-1 d-flex align-items-end">
+          <button class="btn btn-outline-secondary w-100" title="Limpiar filtros">
+            <i class="bi bi-arrow-clockwise">Limpiar</i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Tabla -->
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th *ngFor="let column of columns">
+                {{ column.label }}
+              </th>
+              <th class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let incident of incidents  | incidentFilter: searchText">
+              <td *ngFor="let column of columns">
+                <ng-container *ngIf="column.key === 'createdAt' || column.key === 'updatedAt'; else normalValue">
+                  {{ getValue(incident,column.key) | date:'dd/MM/yyyy HH:mm' }}
+                </ng-container>
+                <ng-template #normalValue>
+                  {{ getValue(incident, column.key) }}
+                </ng-template>
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  <button class="btn btn-sm btn-outline-warning" title="Editar" (click)="openEditIncident(incident)">
+                    <i class="bi bi-pencil">Editar</i>
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" title="Eliminar"
+                    (click)="incident.id !== undefined && deleteIncident(incident.id)">
+                    <i class="bi bi-trash">Eliminar</i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- Paginación -->
+    <div class="card-footer bg-white">
+      <div class="d-flex
+                  flex-column flex-md-row
+                  justify-content-between
+                  align-items-center">
+        <small class="text-muted">
+          Mostrando 1 - 10 de 25 incidentes
+        </small>
+        <nav>
+          <ul class="pagination mb-0">
+            <li class="page-item disabled">
+              <a class="page-link">
+                Anterior
+              </a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link">
+                1
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link">
+                2
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link">
+                3
+              </a>
+            </li>
+            <li class="page-item">
+              <a class="page-link">
+                Siguiente
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<app-incident-form *ngIf="showModal" (close)="closeModal()" (saved)="onIncidentSaved()"
+  [incident]="selectedIncident"></app-incident-form>

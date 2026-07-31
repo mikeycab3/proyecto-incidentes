@@ -1,0 +1,137 @@
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0, 0, 0, 0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title fw-bold mb-1">
+            <i class="bi bi-plus-circle text-primary me-2"></i>
+            {{ incident ? 'Actualizacion' : 'Guardar' }}
+          </h5>
+          <small class="text-muted">
+            {{ incident ? 'Actualizacion del incidente' : 'Registra la información del nuevo incidente.' }}
+          </small>
+        </div>
+        <button type="button" class="btn-close" aria-label="Cerrar" (click)="closeModal()">
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="incidentForm" (ngSubmit)="saveIncident()">
+          <h5 class="fw-bold mb-3">
+            <i class="bi bi-info-circle me-2"></i>
+            Información general
+          </h5>
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label fw-semibold">
+                Título
+                <span class="text-danger">*</span>
+              </label>
+              <input type="text" class="form-control" formControlName="title"
+                placeholder="Ej. Error en sistema de pagos">
+              <div class="text-danger">
+                @if (incidentForm.get('title')?.hasError('required')) {
+                <span>
+                  El título es obligatorio
+                </span>
+                }
+                @if (incidentForm.get('title')?.hasError('minlength')) {
+                <span>
+                  El título debe tener mínimo 3 caracteres
+                </span>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                Categoría
+              </label>
+              <select class="form-select" formControlName="category">
+                <option value="">Selecciona una categoría
+                </option>
+                <option value="SYSTEM"> Sistema</option>
+                <option value="HARDWARE">Hardware</option>
+                <option value="SOFTWARE">Software</option>
+                <option value="NETWORK">Red</option>
+              </select>
+              <div class="text-danger">
+                @if (incidentForm.get('category')?.hasError('required')) {
+                <span>
+                  La categoria es obligatoria
+                </span>
+                }
+              </div>
+            </div>
+            <!-- Prioridad -->
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                Prioridad
+              </label>
+              <select class="form-select" formControlName="priority">
+                <option value="">Selecciona una prioridad</option>
+                <option value="HIGH">Alta</option>
+                <option value="MEDIUM">Media</option>
+                <option value="LOW">Baja</option>
+              </select>
+              <div class="text-danger">
+                @if (incidentForm.get('priority')?.hasError('required')) {
+                <span>
+                  La prioridad es obligatoria
+                </span>
+                }
+              </div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                Estado
+              </label>
+              <select class="form-select" formControlName="status">
+                <option value="OPEN">Abierto
+                </option>
+                <option value="IN_PROGRESS">En progreso
+                </option>
+                <option value="CLOSED">Cerrado
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label fw-semibold">
+                Responsable
+              </label>
+              <input type="text" class="form-control" formControlName="reportedBy" placeholder="Nombre del responsable">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">
+                Descripción
+                <span class="text-danger">*</span>
+              </label>
+              <textarea class="form-control" rows="5" formControlName="description"
+                placeholder="Describe detalladamente el incidente...">
+              </textarea>
+              <div class="text-danger">
+                @if (incidentForm.get('description')?.hasError('required')) {
+                <span>
+                  La descripcion es obligatorio
+                </span>
+                }
+                @if (incidentForm.get('description')?.hasError('minlength')) {
+                <span>
+                  La descripcion debe tener mínimo 10 caracteres
+                </span>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer mt-4">
+            <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">
+              <i class="bi bi-x-lg me-2"></i>
+              Cancelar
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="incidentForm.invalid">
+              {{ incident ? 'Actualizar' : 'Guardar' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
